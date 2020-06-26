@@ -120,7 +120,7 @@
         <scene sceneID="mem-KE-WM9">
             <objects>
                 <viewController title="Lista Kvizova" id="dmK-97-pAw" customClass="QuizListController" customModule="QuizApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Lista Kvizova" id="qEY-V8-5jX"/>
+                    <tabBarItem key="tabBarItem" title="Lista Kvizova" image="list.dash" catalog="system" id="qEY-V8-5jX"/>
                     <navigationItem key="navigationItem" id="mKi-7q-O5b"/>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="toMain" id="YAC-bZ-ugP"/>
@@ -237,6 +237,16 @@
                     <view key="view" contentMode="scaleToFill" id="Ota-id-Tdm">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MeO-11-Gee">
+                                <rect key="frame" x="13" y="44" width="60" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Povratak"/>
+                                <connections>
+                                    <action selector="klik:" destination="DKO-Da-vpr" eventType="touchUpInside" id="Ymb-hX-zXN"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="e2e-A0-SwF"/>
                     </view>
@@ -249,6 +259,7 @@
     </scenes>
     <resources>
         <image name="ellipsis.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="list.dash" catalog="system" width="128" height="85"/>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>
     </resources>
 </document>

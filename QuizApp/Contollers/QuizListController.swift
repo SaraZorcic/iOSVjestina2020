@@ -117,12 +117,16 @@ class QuizListController: UIViewController {
                                                  in: managedContext)!
         let pit = NSManagedObject(entity: entity2,
         insertInto: managedContext)
+        pit.setValue(kviz, forKey: "parentQuiz")
         pit.setValue(pitanje.question, forKey: "questionTxt")
         pit.setValue(pitanje.correctAnswer, forKey: "correctAnswer")
-        pit.setValue(kviz, forKey: "parentQuiz")
+        // Array of Strings
+        let array: [String] = pitanje.answers
+        let arrayAsString: String = array.description
+        pit.setValue(arrayAsString, forKey: "answersJSON")
+        print("setali smo value za answersJSON = ", arrayAsString)
         arrayZaUbacit.append(pit)
        }
-        print("setam value questions za kviz")
         //kviz.(NSSet.init(object: arrayZaUbacit), forKey: "questions")
         
       // 4

@@ -10,12 +10,15 @@ import UIKit
 
 class LeaderboardsViewController: UIViewController {
     var chosenQuizId:Int?
+    @IBAction func klik(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
     override func viewDidLoad() {
           getLeaderBoard()
           super.viewDidLoad()
           }
     func getLeaderBoard(){
-        print(chosenQuizId)
+        //print(chosenQuizId)
         let service = QuizServis()
         service.getLeaderBoards2(quizId: chosenQuizId!)
     }

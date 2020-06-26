@@ -14,6 +14,8 @@ class SearchViewController:UIViewController,UITableViewDelegate, UITableViewData
     @IBOutlet weak var textLabel: UITextField!
     var quizzesDataModels: [NSManagedObject] = []
     var shownDataModels: [NSManagedObject] = []
+    var chosenQuiz:Quiz?
+    var quizzes:[Quiz] = []
     override func viewWillAppear(_ animated: Bool) {
       super.viewWillAppear(animated)
       
@@ -44,6 +46,15 @@ class SearchViewController:UIViewController,UITableViewDelegate, UITableViewData
         }
         
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+              if (segue.identifier == "toMain") {
+               print("segue preparean")
+               let sDest = segue.destination as? ViewController
+               sDest!.chosenQuiz = chosenQuiz
+              }
+          }
+       
+    
     func refineTable(label: String){
             var title=""
             shownDataModels.removeAll()
@@ -85,7 +96,7 @@ class SearchViewController:UIViewController,UITableViewDelegate, UITableViewData
                 if("\(key)" == "title"){
                     title = value as! String
                 }
-                   print("\(key) = \(value)")
+                   //print("\(key) = \(value)")
                }
       cell.textLabel?.text = title
         
@@ -95,6 +106,10 @@ class SearchViewController:UIViewController,UITableViewDelegate, UITableViewData
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("You tapped cell number \(indexPath.row).")
+        //chosenQuiz = quiz
+        print("kliknli na kviz")
+        //to je odabrani kviz salji te podatke i id dalje
+        performSegue(withIdentifier: "toMain", sender: nil)
     }
     
     
@@ -114,7 +129,8 @@ class SearchViewController:UIViewController,UITableViewDelegate, UITableViewData
            // This view controller itself will provide the delegate methods and row data for the table view.
            tableView.delegate = self
            tableView.dataSource = self
-        getQuizObjectsFromCoreData()
+        //getQuizObjectsFromCoreData()
+        print(quizzes)
        }
     func getQuizObjectsFromCoreData(){
        //1
@@ -126,9 +142,44 @@ class SearchViewController:UIViewController,UITableViewDelegate, UITableViewData
              let managedContext =
                appDelegate.persistentContainer.viewContext
              
-             //2
         let fetchRequestK =
                       NSFetchRequest<NSManagedObject>(entityName: "QuizModel")
+        do{
+            let kvizovi = try managedContext.fetch(fetchRequestK)
+            for kviz in kvizovi{
+                var questionsTemp:[Question] = []
+                var quiz=Quiz(id: 0,title: "",qD: "",c: "",level: 0,image: "",questions: questionsTemp)
+                
+                for key in kviz.entity.attributesByName.keys{
+                           let value: Any? = kviz.value(forKey: key)
+                    if("\(key)" == "title"){
+                        quiz.title = value as! String
+                        title = value as! String
+                    }
+                    if("\(key)" == "id"){
+                        quiz.id = value as! Int
+                    }
+                    if("\(key)" == "quizDescription"){
+                        quiz.quizDescription = value as! String
+                    }
+                    if("\(key)" == "category"){
+                        quiz.category = value as! String
+                    }
+                    if("\(key)" == "level"){
+                        quiz.level = value as! Int
+                    }
+                    if("\(key)" == "image"){
+                        quiz.image = value as! String
+                    }
+                           //print("\(key) = \(value)")
+                    }
+                quizzes.append(quiz)
+            }
+        }catch{
+            
+        }
+        
+       
         let fetchRequestQ =
                NSFetchRequest<QuestionModel>(entityName: "QuestionModel")
         
@@ -137,10 +188,25 @@ class SearchViewController:UIViewController,UITableViewDelegate, UITableViewData
             let questions = try managedContext.fetch(fetchRequestQ)
             
             for question in questions{
+                var answersTemp:[String] = []
                 print(question.questionTxt)
-                print(question.parentQuiz?.id)
+                print(question.correctAnswer)
+                print(question.answers)
+                print(question.answersJSON)
+                var que = Question(id: 0, answers: answersTemp, question: "", correct: 0)
+                que.correctAnswer = Int(question.correctAnswer)
+                que.question = question.questionTxt!
+                let stringic = question.answersJSON as! String
+                let stringAsData = stringic.data(using: String.Encoding.utf16)
+                let arrayBack: [String] = try! JSONDecoder().decode([String].self, from: stringAsData!)
+                que.answers.append(contentsOf: arrayBack)
+                for quiz in quizzes {
+                    if quiz.id == Int(question.parentQuiz!.id) {
+                        quiz.questions.append(que)
+                    }
+                }
             }
-        }catch let error as NSError{
+        }catch let _ as NSError{
             print("could not fetch")
         }
         
