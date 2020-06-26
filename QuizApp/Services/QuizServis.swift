@@ -9,6 +9,31 @@
 import Foundation
 
 class QuizServis {
+    func getLeaderBoards2(quizId:Int) {
+        print("zatrazili smo")
+        let token = UserDefaults.standard.object(forKey: "user_token")
+        if let url = URL(string:"https://iosquiz.herokuap.com/api/score?quiz_id=\(quizId)") {
+            var request = URLRequest(url: url)
+            request.httpMethod="GET"
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("\(token)", forHTTPHeaderField: "Authorization")
+            let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let data = data {
+                    do {
+                        print(data)
+                        print("dobili")
+                    }
+
+                } else {
+                    
+                }
+            }
+            dataTask.resume()
+        } else {
+           
+        }
+
+    }
     
     func fetch(urlString: String, completion: @escaping ((QuizCollection?) -> Void)) {
         if let url = URL(string: urlString) {

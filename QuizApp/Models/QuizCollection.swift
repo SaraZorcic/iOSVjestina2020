@@ -11,19 +11,19 @@ import Foundation
 class QuizCollection {
     
     let allQuizzes: [Quiz]
-    struct Sara : Codable {
+    struct Kvizovi : Codable {
         let quizzes: [Quiz]
     }
     
     init?(jsonData: Data) {
 
         let decoder = JSONDecoder()
-        let sara = try? decoder.decode(Sara.self, from: jsonData)
-        if sara == nil {
+        let kvizovi = try? decoder.decode(Kvizovi.self, from: jsonData)
+        if kvizovi == nil {
             //saljemo nil da prikaze error view
             return nil
         }
-        self.allQuizzes = sara?.quizzes as! [Quiz]
+        self.allQuizzes = kvizovi?.quizzes as! [Quiz]
         
     }
     
